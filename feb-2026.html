@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    
+    <link rel="stylesheet" type="text/css" href="https://mylonasxyz-lang.github.io/Mylonas-Engine/exolve-m.css"/>
+    <script src="https://mylonasxyz-lang.github.io/Mylonas-Engine/exolve-m.js"></script>
+
+   <style>
+    /* 1. Global Font and Base Color */
+    #mylonas-puzzle-area, #mylonas-puzzle-area * {
+        font-family: "Trebuchet MS", sans-serif !important;
+        color: #333;
+    }
+
+    /* 2. Resetting the Grid (No Gold, No Rounding) */
+    .xlv-grid {
+        border: 1px solid #000 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+
+    /* 3. The "PuzzleMe Blue" Accents */
+    .xlv-active {
+        fill: #3b88eb !important;
+    }
+    
+    .xlv-curr-clue-cells {
+        fill: #d1e4ff !important;
+    }
+
+    /* 4. Clue Headers (Uppercase, Blue Accent) */
+    .xlv-clue-list-title {
+        font-weight: bold !important;
+        text-transform: uppercase !important;
+        font-size: 18px !important;
+        border-bottom: 2px solid #3b88eb !important;
+        padding-bottom: 5px;
+        margin-top: 20px !important;
+    }
+
+    /* 5. Clean Buttons (Matching the Blue theme) */
+    .xlv-button {
+        background-color: #ffffff !important;
+        border: 1px solid #3b88eb !important;
+        border-radius: 4px !important;
+        color: #3b88eb !important;
+        font-weight: normal !important;
+    }
+
+    .xlv-button:hover {
+        background-color: #3b88eb !important;
+        color: #ffffff !important;
+    }
+</style>
+</head>
+<body>
+
+<div id="mylonas-puzzle-area">
+    <div id="exolve"></div>
+    
+    <script>
+createExolve(`
+  exolve-begin
+  exolve-width: 15
+  exolve-height: 15
+  exolve-title: The Mylonas Monthly-Feb 2026
+  exolve-setter: Mylonas
+  exolve-copyright: Mylonas Crosswords
+  exolve-option: ignore-enum-mismatch
+  exolve-maker:
+    Converted by exolve-from-puz.js from The Mylonas Monthly-Feb 2026.puz
+  exolve-grid:
+    BASH.DENOMINATE
+    E.Y...L.F.N.D.A
+    NINE.GODFEARING
+    E.D...P.B.G.E.L
+    DURABLE.REROUTE
+    I.O.R...E.E.S.S
+    COMMONPLACE....
+    T.E.A.I.K.M.O.T
+    ....DISASSEMBLE
+    B.I.M.T...N.I.R
+    AMERICA.ROTATOR
+    N.Y.N.C.O...U.E
+    GRANDCHILD.BARN
+    E.S.E.I.E...R.C
+    ROUNDHOUSE.DYKE
+
+  exolve-across:
+    1 Blow a bit of a do (4)
+    3 Entitle some French put forward (10)
+    9 A number given income return (4)
+    10 Ignored fag and became pious (10)
+    11 Fighting duel gets Rod back to strength (7)
+    13 Divert around our tree (7)
+    14 Coarse setting is widespread (11)
+    18 Based upon smiles unfortunately led to break up. (11)
+    21 Before noon Heather finds us (7)
+    22 Either way gold encircles cheap wheel (7)
+    23 Third generation of Big Issue (10)
+    24 Graduate ran artless shed (4)
+    25 Out of honour sued variety theatre (10)
+    26 There's a barrier in tidy kennel (4)
+
+  exolve-down:
+    1 Saint cooks balanced diets but no salad (8)
+    2 Delta separated vice soundly from city complex (8)
+    4 The Spanish love exercise when running away (5)
+    5 Side destroys deliveries (9)
+    6 From integer and name make accord (2,9)
+    7 Notice that is American saying farewells (6)
+    8 Fliers are well below standard (6)
+    12 Liberal cared, being tolerant (11)
+    15 Crazy cop is Thai nut (9)
+    16 Forced IRA out by necrology (8)
+    17 Recentre changed for actor Stamp (8)
+    19 Second class rage making firework (6)
+    20 Head man that is unknown as you heard (6)
+    22 Loser plays these parts (5)
+
+  exolve-end`);
+    </script>
+</div>
+
+</body>
+</html>
