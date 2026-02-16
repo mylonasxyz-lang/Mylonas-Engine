@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    
+    <link rel="stylesheet" type="text/css" href="https://mylonasxyz-lang.github.io/Mylonas-Engine/exolve-m.css"/>
+    <script src="https://mylonasxyz-lang.github.io/Mylonas-Engine/exolve-m.js"></script>
+
+   <style>
+    /* 1. Global Font and Base Color */
+    #mylonas-puzzle-area, #mylonas-puzzle-area * {
+        font-family: "Trebuchet MS", sans-serif !important;
+        color: #333;
+    }
+
+    /* 2. Resetting the Grid (No Gold, No Rounding) */
+    .xlv-grid {
+        border: 1px solid #000 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+
+    /* 3. The "PuzzleMe Blue" Accents */
+    .xlv-active {
+        fill: #3b88eb !important;
+    }
+    
+    .xlv-curr-clue-cells {
+        fill: #d1e4ff !important;
+    }
+
+    /* 4. Clue Headers (Uppercase, Blue Accent) */
+    .xlv-clue-list-title {
+        font-weight: bold !important;
+        text-transform: uppercase !important;
+        font-size: 18px !important;
+        border-bottom: 2px solid #3b88eb !important;
+        padding-bottom: 5px;
+        margin-top: 20px !important;
+    }
+
+    /* 5. Clean Buttons (Matching the Blue theme) */
+    .xlv-button {
+        background-color: #ffffff !important;
+        border: 1px solid #3b88eb !important;
+        border-radius: 4px !important;
+        color: #3b88eb !important;
+        font-weight: normal !important;
+    }
+
+    .xlv-button:hover {
+        background-color: #3b88eb !important;
+        color: #ffffff !important;
+    }
+</style>
+</head>
+<body>
+
+<div id="mylonas-puzzle-area">
+    <div id="exolve"></div>
+    
+    <script>
+        // INSERT YOUR PUZZLE DATA HERE
+        // Copy your exolve puzzle specification from Crossword Compiler
+        // and paste it between the backticks below
+        
+        createExolve(`
+            exolve-begin
+            
+            // Your puzzle data goes here
+            
+            exolve-end
+        `);
+    </script>
+</div>
+
+</body>
+</html>
