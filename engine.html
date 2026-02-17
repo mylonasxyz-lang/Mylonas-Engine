@@ -37,11 +37,19 @@
         border-radius: 4px !important;
         color: #3b88eb !important;
         font-weight: normal !important;
+        font-size: 14px !important;
+        padding: 6px !important;
     }
     
     .xlv-button:hover {
         background-color: #3b88eb !important;
         color: #ffffff !important;
+    }
+
+    /* Hide navigation buttons */
+    .xlv-prev,
+    .xlv-next {
+        display: none !important;
     }
 
     /* 5. Hide small print links but keep copyright */
@@ -148,22 +156,7 @@
                 }
             });
 
-            // Move all action buttons between nav buttons
-            const prevBtn = document.querySelector('.xlv-prev');
-            const nextBtn = document.querySelector('.xlv-next');
-
-            if (prevBtn && nextBtn) {
-                const allButtons = document.querySelectorAll('.xlv-button');
-                allButtons.forEach(function(btn) {
-                    const text = btn.textContent.trim();
-                    if (text === 'Clear Word' || text === 'Reset' ||
-                        text === 'Reveal Word' || text === 'Show Solution') {
-                        nextBtn.parentNode.insertBefore(btn, nextBtn);
-                    }
-                });
-            }
-
-            // Add Print button after next button
+            // Add Print button
             const controlsRow = document.querySelector('.xlv-controls-row');
             if (controlsRow) {
                 const printBtn = document.createElement('button');
