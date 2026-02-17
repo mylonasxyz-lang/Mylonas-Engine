@@ -43,22 +43,23 @@
         background-color: #3b88eb !important;
         color: #ffffff !important;
     }
-/* 5. Hide small print links but keep copyright */
-.xlv-small-print {
-    display: none !important;
-}
 
-.xlv-status {
-    display: none !important;
-}
+    /* 5. Hide small print links but keep copyright */
+    .xlv-small-print {
+        display: none !important;
+    }
 
-.xlv-small-print .xlv-copyright {
-    display: block !important;
-    text-align: center;
-    font-size: small;
-    margin-top: 8px;
-}
+    .xlv-status {
+        display: none !important;
+    }
 
+    .xlv-copyright {
+        display: block !important;
+        text-align: center;
+        font-size: small;
+        margin-top: 8px;
+        color: #333;
+    }
 
     /* 6. Style the print button to match other buttons */
     #mylonas-print-btn {
@@ -141,9 +142,18 @@ createExolve(`
     22 Loser plays these parts (5)
   exolve-end`);
 
-    // Add Print button to the controls after puzzle loads
+    // Add Print button and fix copyright after puzzle loads
     window.addEventListener('load', function() {
         setTimeout(function() {
+            // Move copyright out of small-print before hiding it
+            const copyright = document.querySelector('.xlv-copyright');
+            const smallPrint = document.querySelector('.xlv-small-print');
+            
+            if (copyright && smallPrint) {
+                smallPrint.parentNode.insertBefore(copyright, smallPrint.nextSibling);
+            }
+
+            // Add Print button
             const controlsRow = document.querySelector('.xlv-controls-row');
             if (controlsRow) {
                 const printBtn = document.createElement('button');
