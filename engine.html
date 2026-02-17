@@ -12,14 +12,14 @@
         font-family: "Trebuchet MS", sans-serif !important;
         color: #333;
     }
-
+    
     /* 2. Resetting the Grid (No Gold, No Rounding) */
     .xlv-grid {
         border: 1px solid #000 !important;
         border-radius: 0 !important;
         box-shadow: none !important;
     }
-
+    
     /* 3. Clue Headers (Uppercase, Blue Accent) */
     .xlv-clue-list-title {
         font-weight: bold !important;
@@ -29,7 +29,7 @@
         padding-bottom: 5px;
         margin-top: 20px !important;
     }
-
+    
     /* 4. Clean Buttons (Matching the Blue theme) */
     .xlv-button {
         background-color: #ffffff !important;
@@ -38,10 +38,70 @@
         color: #3b88eb !important;
         font-weight: normal !important;
     }
-
+    
     .xlv-button:hover {
         background-color: #3b88eb !important;
         color: #ffffff !important;
+    }
+
+    /* 5. Hide small print links but keep copyright */
+    .xlv-small-print {
+        display: none !important;
+    }
+
+    .xlv-status {
+        display: none !important;
+    }
+
+    .xlv-copyright {
+        display: block !important;
+        text-align: center;
+        font-size: small;
+        margin-top: 8px;
+        color: #333;
+    }
+
+    /* 6. Style the print button to match other buttons */
+    #mylonas-print-btn {
+        background-color: #ffffff;
+        border: 1px solid #3b88eb;
+        border-radius: 4px;
+        color: #3b88eb;
+        font-size: 14px;
+        padding: 6px;
+        cursor: pointer;
+        margin: 6px 4px;
+    }
+
+    #mylonas-print-btn:hover {
+        background-color: #3b88eb;
+        color: #ffffff;
+    }
+
+    /* 7. Current clue display box */
+    .xlv-curr-clue {
+        background-color: #d1e4ff !important;
+        color: #333 !important;
+        padding: 8px 8px !important;
+        border-radius: 0px !important;
+        margin-bottom: 0px !important;
+    }
+
+    .xlv-curr-clue-inner {
+        background-color: #d1e4ff !important;
+    }
+
+    /* 7b. Current clue box on mobile */
+    .xlv-phone-display .xlv-curr-clue {
+        background-color: #d1e4ff !important;
+        color: #333 !important;
+        padding: 8px 8px !important;
+        border-radius: 0px !important;
+        margin-bottom: 0px !important;
+    }
+
+    .xlv-phone-display .xlv-curr-clue-inner {
+        background-color: #d1e4ff !important;
     }
 </style>
 </head>
@@ -53,14 +113,67 @@
         // INSERT YOUR PUZZLE DATA HERE
         // Copy your exolve puzzle specification from Crossword Compiler
         // and paste it between the backticks below
-        
+
         createExolve(`
             exolve-begin
-            
+
             // Your puzzle data goes here
-            
+
             exolve-end
         `);
+
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            // Move copyright out of small-print before hiding it
+            const copyright = document.querySelector('.xlv-copyright');
+            const smallPrint = document.querySelector('.xlv-small-print');
+            if (copyright && smallPrint) {
+                smallPrint.parentNode.insertBefore(copyright, smallPrint.nextSibling);
+            }
+
+            // Rename and hide buttons
+            const buttons = document.querySelectorAll('.xlv-button');
+            buttons.forEach(function(btn) {
+                const text = btn.textContent.trim();
+                if (text === 'Reveal this') {
+                    btn.textContent = 'Reveal Word';
+                } else if (text === 'Reveal all!') {
+                    btn.textContent = 'Show Solution';
+                } else if (text === 'Clear this') {
+                    btn.textContent = 'Clear Word';
+                } else if (text === 'Clear all!') {
+                    btn.textContent = 'Reset';
+                } else if (text === 'Check this' || text === 'Check all!') {
+                    btn.style.display = 'none';
+                }
+            });
+
+            // Move all action buttons between nav buttons
+            const prevBtn = document.querySelector('.xlv-prev');
+            const nextBtn = document.querySelector('.xlv-next');
+
+            if (prevBtn && nextBtn) {
+                const allButtons = document.querySelectorAll('.xlv-button');
+                allButtons.forEach(function(btn) {
+                    const text = btn.textContent.trim();
+                    if (text === 'Clear Word' || text === 'Reset' ||
+                        text === 'Reveal Word' || text === 'Show Solution') {
+                        nextBtn.parentNode.insertBefore(btn, nextBtn);
+                    }
+                });
+            }
+
+            // Add Print button after next button
+            const controlsRow = document.querySelector('.xlv-controls-row');
+            if (controlsRow) {
+                const printBtn = document.createElement('button');
+                printBtn.id = 'mylonas-print-btn';
+                printBtn.textContent = 'Print';
+                printBtn.onclick = function() { window.print(); };
+                controlsRow.appendChild(printBtn);
+            }
+        }, 500);
+    });
     </script>
 </div>
 </body>
