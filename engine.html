@@ -38,7 +38,8 @@
         color: #3b88eb !important;
         font-weight: normal !important;
         font-size: 14px !important;
-        padding: 6px !important;
+        padding: 6px 10px !important;
+        margin: 4px !important;
     }
     
     .xlv-button:hover {
@@ -49,6 +50,11 @@
     /* Hide navigation buttons */
     .xlv-prev,
     .xlv-next {
+        display: none !important;
+    }
+
+    /* Hide second controls row */
+    .xlv-controls-row:nth-child(2) {
         display: none !important;
     }
 
@@ -69,24 +75,7 @@
         color: #333;
     }
 
-    /* 6. Style the print button to match other buttons */
-    #mylonas-print-btn {
-        background-color: #ffffff;
-        border: 1px solid #3b88eb;
-        border-radius: 4px;
-        color: #3b88eb;
-        font-size: 14px;
-        padding: 6px;
-        cursor: pointer;
-        margin: 6px 4px;
-    }
-
-    #mylonas-print-btn:hover {
-        background-color: #3b88eb;
-        color: #ffffff;
-    }
-
-    /* 7. Current clue display box */
+    /* 6. Current clue display box */
     .xlv-curr-clue {
         background-color: #d1e4ff !important;
         color: #333 !important;
@@ -99,7 +88,7 @@
         background-color: #d1e4ff !important;
     }
 
-    /* 7b. Current clue box on mobile */
+    /* 6b. Current clue box on mobile */
     .xlv-phone-display .xlv-curr-clue {
         background-color: #d1e4ff !important;
         color: #333 !important;
@@ -156,14 +145,26 @@
                 }
             });
 
-            // Add Print button
-            const controlsRow = document.querySelector('.xlv-controls-row');
-            if (controlsRow) {
+            // Move all buttons to first controls row
+            const controlsRows = document.querySelectorAll('.xlv-controls-row');
+            const firstRow = controlsRows[0];
+
+            if (firstRow) {
+                // Move reveal buttons to first row
+                const allButtons = document.querySelectorAll('.xlv-button');
+                allButtons.forEach(function(btn) {
+                    const text = btn.textContent.trim();
+                    if (text === 'Reveal Word' || text === 'Show Solution') {
+                        firstRow.appendChild(btn);
+                    }
+                });
+
+                // Add Print button as xlv-button so it matches
                 const printBtn = document.createElement('button');
-                printBtn.id = 'mylonas-print-btn';
                 printBtn.textContent = 'Print';
+                printBtn.className = 'xlv-button';
                 printBtn.onclick = function() { window.print(); };
-                controlsRow.appendChild(printBtn);
+                firstRow.appendChild(printBtn);
             }
         }, 500);
     });
