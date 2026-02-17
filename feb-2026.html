@@ -43,6 +43,39 @@
         background-color: #3b88eb !important;
         color: #ffffff !important;
     }
+
+    /* 5. Hide small print links but keep copyright */
+    .xlv-small-print {
+        display: none !important;
+    }
+
+    .xlv-status {
+        display: none !important;
+    }
+
+    .xlv-copyright {
+        display: block !important;
+        text-align: center;
+        font-size: small;
+        margin-top: 8px;
+    }
+
+    /* 6. Style the print button to match other buttons */
+    #mylonas-print-btn {
+        background-color: #ffffff;
+        border: 1px solid #3b88eb;
+        border-radius: 4px;
+        color: #3b88eb;
+        font-size: 14px;
+        padding: 6px;
+        cursor: pointer;
+        margin: 6px 4px;
+    }
+
+    #mylonas-print-btn:hover {
+        background-color: #3b88eb;
+        color: #ffffff;
+    }
 </style>
 </head>
 <body>
@@ -107,6 +140,20 @@ createExolve(`
     20 Head man that is unknown as you heard (6)
     22 Loser plays these parts (5)
   exolve-end`);
+
+    // Add Print button to the controls after puzzle loads
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            const controlsRow = document.querySelector('.xlv-controls-row');
+            if (controlsRow) {
+                const printBtn = document.createElement('button');
+                printBtn.id = 'mylonas-print-btn';
+                printBtn.textContent = 'Print';
+                printBtn.onclick = function() { window.print(); };
+                controlsRow.appendChild(printBtn);
+            }
+        }, 500);
+    });
     </script>
 </div>
 </body>
