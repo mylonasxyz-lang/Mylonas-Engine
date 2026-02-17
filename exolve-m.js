@@ -299,7 +299,7 @@ function Exolve(puzzleSpec,
 
   this.smartColoring = true;
   this.lightColorScheme = {
-    'active': '#d1e4ff',
+    'active': '#3b88eb',
     'active-clue': '#d1e4ff',
     'anno': 'darkgreen',
     'concise-clue': 'darkred',
