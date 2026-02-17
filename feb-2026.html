@@ -142,16 +142,31 @@ createExolve(`
     22 Loser plays these parts (5)
   exolve-end`);
 
-    // Add Print button and fix copyright after puzzle loads
     window.addEventListener('load', function() {
         setTimeout(function() {
             // Move copyright out of small-print before hiding it
             const copyright = document.querySelector('.xlv-copyright');
             const smallPrint = document.querySelector('.xlv-small-print');
-            
             if (copyright && smallPrint) {
                 smallPrint.parentNode.insertBefore(copyright, smallPrint.nextSibling);
             }
+
+            // Rename and hide buttons
+            const buttons = document.querySelectorAll('.xlv-button');
+            buttons.forEach(function(btn) {
+                const text = btn.textContent.trim();
+                if (text === 'Reveal this') {
+                    btn.textContent = 'Reveal Word';
+                } else if (text === 'Reveal all!') {
+                    btn.textContent = 'Reveal Solution';
+                } else if (text === 'Clear this') {
+                    btn.textContent = 'Clear Word';
+                } else if (text === 'Clear all!') {
+                    btn.textContent = 'Reset';
+                } else if (text === 'Check this' || text === 'Check all!') {
+                    btn.style.display = 'none';
+                }
+            });
 
             // Add Print button
             const controlsRow = document.querySelector('.xlv-controls-row');
