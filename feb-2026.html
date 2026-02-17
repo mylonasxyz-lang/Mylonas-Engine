@@ -168,7 +168,22 @@ createExolve(`
                 }
             });
 
-            // Add Print button
+            // Move all action buttons between nav buttons
+            const prevBtn = document.querySelector('.xlv-prev');
+            const nextBtn = document.querySelector('.xlv-next');
+
+            if (prevBtn && nextBtn) {
+                const allButtons = document.querySelectorAll('.xlv-button');
+                allButtons.forEach(function(btn) {
+                    const text = btn.textContent.trim();
+                    if (text === 'Clear Word' || text === 'Reset' ||
+                        text === 'Reveal Word' || text === 'Reveal Solution') {
+                        nextBtn.parentNode.insertBefore(btn, nextBtn);
+                    }
+                });
+            }
+
+            // Add Print button after next button
             const controlsRow = document.querySelector('.xlv-controls-row');
             if (controlsRow) {
                 const printBtn = document.createElement('button');
