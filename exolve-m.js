@@ -300,7 +300,7 @@ function Exolve(puzzleSpec,
   this.smartColoring = true;
   this.lightColorScheme = {
     'active': '#d1e4ff',
-    'active-clue': '#3b88eb',
+    'active-clue': '#d1e4ff',
     'anno': 'darkgreen',
     'concise-clue': 'darkred',
     'hint': 'dodgerblue',
@@ -346,7 +346,7 @@ function Exolve(puzzleSpec,
   this.darkColorScheme = {
     ...this.lightColorScheme,
     'currclue': 'black',
-    'curr-unsolved': '#3b88eb',
+    'curr-unsolved': '#d1e4ff',
     'active-clue': '#d1e4ff',
     'orphan': '#663300',
     'anno': 'lightgreen',
