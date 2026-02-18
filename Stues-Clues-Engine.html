@@ -81,6 +81,7 @@
         padding: 8px 8px !important;
         border-radius: 0px !important;
         margin-bottom: 0px !important;
+        display: block !important;
     }
 
     .xlv-curr-clue-inner {
@@ -106,8 +107,11 @@
     }
 
     /* 7. Remove border around grid container */
-    .xlv-grid-parent {
+    .xlv-grid-parent,
+    .xlv-grid-parent-centerer {
         border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
     }
 
     /* 8. Hide the clue list - only show clue in top box */
@@ -141,11 +145,11 @@ createExolve(`
   exolve-copyright: 
   exolve-option: ignore-enum-mismatch
   exolve-grid:
-    TOKYO
+    ANSWER
   exolve-across:
-    1 Kyoto devalued capital (5)
-Hint:  Anag.(devalued) of KYOTO
-Hint: Capital of Japan 
+    1 Your clue here (5)
+Hint: First hint here
+Hint: Second hint here
   exolve-end`);
 
     window.addEventListener('load', function() {
@@ -157,11 +161,19 @@ Hint: Capital of Japan
                 smallPrint.parentNode.insertBefore(copyright, smallPrint.nextSibling);
             }
 
-            // Auto-select the first (and only) clue on load
-            const firstClue = document.querySelector('.xlv-clickable');
-            if (firstClue) {
-                firstClue.click();
+            // Make sure curr-clue is visible
+            const currClue = document.querySelector('.xlv-curr-clue');
+            if (currClue) {
+                currClue.style.display = 'block';
             }
+
+            // Auto-select the clue - wait a bit longer
+            setTimeout(function() {
+                const firstClue = document.querySelector('.xlv-clickable');
+                if (firstClue) {
+                    firstClue.click();
+                }
+            }, 200);
 
             // Create custom button row with just Show Answer
             const controls = document.querySelector('.xlv-controls');
