@@ -118,16 +118,15 @@
         display: none !important;
     }
 
-    /* 9. Fix floating input position - keep it but position it correctly */
+    /* 9. Make floating input invisible but functional */
     .xlv-grid-input-wrapper {
         position: absolute !important;
-        pointer-events: none !important;
     }
 
     .xlv-grid-input {
-        pointer-events: auto !important;
-        opacity: 1 !important;
-        color: #333 !important;
+        color: transparent !important;
+        background: transparent !important;
+        caret-color: #333 !important;
     }
 </style>
 </head>
