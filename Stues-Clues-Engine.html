@@ -15,11 +15,13 @@
         color: #333;
     }
     
-    /* 2. Resetting the Grid (No Gold, No Rounding) */
+    /* 2. Grid Styling - Centered at Top */
     .xlv-grid {
-        border: 1px solid #000 !important;
-        border-radius: 0 !important;
+        border: none !important;
         box-shadow: none !important;
+        margin: 20px auto !important;
+        display: block !important;
+        float: none !important;
     }
     
     /* 3. Clean Buttons (Matching the Blue theme) */
@@ -48,13 +50,6 @@
     /* Hide all controls rows */
     .xlv-controls-row {
         display: none !important;
-    }
-
-    /* Show only our custom button row */
-    #stu-button-row {
-        display: block !important;
-        text-align: center;
-        margin: 10px 0;
     }
 
     /* 4. Hide small print links but keep copyright */
@@ -185,29 +180,6 @@ Hint: Capital of Japan
                     firstCell.click();
                 }
             }, 300);
-
-            // Create custom button row with just Show Answer
-            const controls = document.querySelector('.xlv-controls');
-            if (controls) {
-                const buttonRow = document.createElement('div');
-                buttonRow.id = 'stu-button-row';
-                
-                const showAnswerBtn = document.createElement('button');
-                showAnswerBtn.textContent = 'Show Answer';
-                showAnswerBtn.className = 'xlv-button';
-                showAnswerBtn.onclick = function() {
-                    // Find and click the reveal all button
-                    const buttons = document.querySelectorAll('.xlv-button');
-                    buttons.forEach(function(btn) {
-                        if (btn.textContent.includes('Reveal all')) {
-                            btn.click();
-                        }
-                    });
-                };
-                
-                buttonRow.appendChild(showAnswerBtn);
-                controls.appendChild(buttonRow);
-            }
         }, 500);
     });
     </script>
