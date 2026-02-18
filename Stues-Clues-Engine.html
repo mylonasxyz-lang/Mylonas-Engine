@@ -1,1 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    
+    <link rel="stylesheet" type="text/css" href="https://mylonasxyz-lang.github.io/Mylonas-Engine/exolve-m.css"/>
+    <script src="https://mylonasxyz-lang.github.io/Mylonas-Engine/exolve-m.js"></script>
+   <style>
+    /* 1. Global Font and Base Color */
+    #mylonas-puzzle-area, #mylonas-puzzle-area * {
+        font-family: "Trebuchet MS", sans-serif !important;
+        color: #333;
+    }
+    
+    /* 2. Resetting the Grid (No Gold, No Rounding) */
+    .xlv-grid {
+        border: 1px solid #000 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+    
+    /* 3. Clue Headers (Uppercase, Blue Accent) */
+    .xlv-clue-list-title {
+        font-weight: bold !important;
+        text-transform: uppercase !important;
+        font-size: 18px !important;
+        border-bottom: 2px solid #3b88eb !important;
+        padding-bottom: 5px;
+        margin-top: 20px !important;
+    }
+    
+    /* 4. Clean Buttons (Matching the Blue theme) */
+    .xlv-button {
+        background-color: #ffffff !important;
+        border: 1px solid #3b88eb !important;
+        border-radius: 4px !important;
+        color: #3b88eb !important;
+        font-weight: normal !important;
+        font-size: 14px !important;
+        padding: 6px 10px !important;
+        margin: 4px !important;
+    }
+    
+    .xlv-button:hover {
+        background-color: #3b88eb !important;
+        color: #ffffff !important;
+    }
 
+    /* Hide navigation buttons */
+    .xlv-prev,
+    .xlv-next {
+        display: none !important;
+    }
+
+    /* Hide second controls row */
+    .xlv-controls-row:nth-child(2) {
+        display: none !important;
+    }
+
+    /* 5. Hide small print links but keep copyright */
+    .xlv-small-print {
+        display: none !important;
+    }
+
+    .xlv-status {
+        display: none !important;
+    }
+
+    .xlv-copyright {
+        display: block !important;
+        text-align: center;
+        font-size: small;
+        margin-top: 8px;
+        color: #333;
+    }
+
+    /* 6. Current clue display box */
+    .xlv-curr-clue {
+        background-color: #d1e4ff !important;
+        color: #333 !important;
+        padding: 8px 8px !important;
+        border-radius: 0px !important;
+        margin-bottom: 0px !important;
+    }
+
+    .xlv-curr-clue-inner {
+        background-color: #d1e4ff !important;
+    }
+
+    /* 6b. Current clue box on mobile */
+    .xlv-phone-display .xlv-curr-clue {
+        background-color: #d1e4ff !important;
+        color: #333 !important;
+        padding: 8px 8px !important;
+        border-radius: 0px !important;
+        margin-bottom: 0px !important;
+    }
+
+    .xlv-phone-display .xlv-curr-clue-inner {
+        background-color: #d1e4ff !important;
+    }
+</style>
+</head>
+<body>
+<div id="mylonas-puzzle-area">
+    <div id="exolve"></div>
+    
+    <script>
+        // INSERT YOUR PUZZLE DATA HERE
+        // Copy your exolve puzzle specification from Crossword Compiler
+        // and paste it between the backticks below
+
+        createExolve(`
+            exolve-begin
+
+            // Your puzzle data goes here
+
+            exolve-end
+        `);
+
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            // Move copyright out of small-print before hiding it
+            const copyright = document.querySelector('.xlv-copyright');
+            const smallPrint = document.querySelector('.xlv-small-print');
+            if (copyright && smallPrint) {
+                smallPrint.parentNode.insertBefore(copyright, smallPrint.nextSibling);
+            }
+
+            // Rename and hide buttons
+            const buttons = document.querySelectorAll('.xlv-button');
+            buttons.forEach(function(btn) {
+                const text = btn.textContent.trim();
+                if (text === 'Reveal this') {
+                    btn.textContent = 'Reveal Word';
+                } else if (text === 'Reveal all!') {
+                    btn.textContent = 'Show Solution';
+                } else if (text === 'Clear this') {
+                    btn.textContent = 'Clear Word';
+                } else if (text === 'Clear all!') {
+                    btn.textContent = 'Reset';
+                } else if (text === 'Check this' || text === 'Check all!') {
+                    btn.style.display = 'none';
+                }
+            });
+
+            // Move all buttons to first controls row
+            const controlsRows = document.querySelectorAll('.xlv-controls-row');
+            const firstRow = controlsRows[0];
+
+            if (firstRow) {
+                // Move reveal buttons to first row
+                const allButtons = document.querySelectorAll('.xlv-button');
+                allButtons.forEach(function(btn) {
+                    const text = btn.textContent.trim();
+                    if (text === 'Reveal Word' || text === 'Show Solution') {
+                        firstRow.appendChild(btn);
+                    }
+                });
+
+                // Add Print button as xlv-button so it matches
+                const printBtn = document.createElement('button');
+                printBtn.textContent = 'Print';
+                printBtn.className = 'xlv-button';
+                printBtn.onclick = function() { window.print(); };
+                firstRow.appendChild(printBtn);
+            }
+        }, 500);
+    });
+    </script>
+</div>
+</body>
+</html>
