@@ -80,7 +80,7 @@
         color: #333 !important;
         padding: 8px 8px !important;
         border-radius: 0px !important;
-        margin-bottom: 0px !important;
+        margin-bottom: 8px !important;
         display: block !important;
     }
 
@@ -106,16 +106,27 @@
         display: none !important;
     }
 
-    /* 7. Remove border around grid container */
+    /* 7. Remove ALL borders around grid container and flex containers */
     .xlv-grid-parent,
-    .xlv-grid-parent-centerer {
+    .xlv-grid-parent-centerer,
+    .xlv-grid-panel,
+    .xlv-clues-flex,
+    .xlv-grid-and-clues-flex {
         border: none !important;
         outline: none !important;
         box-shadow: none !important;
     }
 
-    /* 8. Hide the clue list - only show clue in top box */
+    /* 8. Hide the clue list visually but keep it functional */
     .xlv-clues-box {
+        position: absolute !important;
+        left: -9999px !important;
+        width: 1px !important;
+        height: 1px !important;
+        overflow: hidden !important;
+    }
+
+    .xlv-clues-panel {
         display: none !important;
     }
 </style>
@@ -167,13 +178,13 @@ Hint: Capital of Japan
                 currClue.style.display = 'block';
             }
 
-            // Auto-select the clue - wait a bit longer
+            // Auto-select by clicking the first grid cell
             setTimeout(function() {
-                const firstClue = document.querySelector('.xlv-clickable');
-                if (firstClue) {
-                    firstClue.click();
+                const firstCell = document.querySelector('.xlv-cell-text');
+                if (firstCell) {
+                    firstCell.click();
                 }
-            }, 200);
+            }, 300);
 
             // Create custom button row with just Show Answer
             const controls = document.querySelector('.xlv-controls');
