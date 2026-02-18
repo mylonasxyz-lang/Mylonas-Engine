@@ -118,19 +118,16 @@
         display: none !important;
     }
 
-    /* 9. Hide floating input wrapper */
+    /* 9. Fix floating input position - keep it but position it correctly */
     .xlv-grid-input-wrapper {
-        display: none !important;
+        position: absolute !important;
+        pointer-events: none !important;
     }
 
     .xlv-grid-input {
-        display: none !important;
-    }
-
-    /* 10. Ensure text appears in cells only */
-    .xlv-cell-text {
         pointer-events: auto !important;
-        cursor: text !important;
+        opacity: 1 !important;
+        color: #333 !important;
     }
 </style>
 </head>
