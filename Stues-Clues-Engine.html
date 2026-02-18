@@ -112,15 +112,8 @@
         box-shadow: none !important;
     }
 
-    /* 8. Hide the clue list visually but keep it functional */
-    .xlv-clues-box {
-        position: absolute !important;
-        left: -9999px !important;
-        width: 1px !important;
-        height: 1px !important;
-        overflow: hidden !important;
-    }
-
+    /* 8. Hide the clue list completely */
+    .xlv-clues-box,
     .xlv-clues-panel {
         display: none !important;
     }
@@ -167,13 +160,7 @@ Hint: Capital of Japan
                 smallPrint.parentNode.insertBefore(copyright, smallPrint.nextSibling);
             }
 
-            // Make sure curr-clue is visible
-            const currClue = document.querySelector('.xlv-curr-clue');
-            if (currClue) {
-                currClue.style.display = 'block';
-            }
-
-            // Auto-select by clicking the first grid cell
+            // Auto-click the first grid cell to activate the clue
             setTimeout(function() {
                 const firstCell = document.querySelector('.xlv-cell-text');
                 if (firstCell) {
