@@ -9493,9 +9493,7 @@ window.print();
    */
   this.handleAfterPrint();
 }
-    });
-  });
-
+ 
 
 
 Exolve.prototype.handleAfterPrint = function() {
