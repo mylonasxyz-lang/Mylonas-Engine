@@ -156,6 +156,7 @@ Version: Exolve v1.67, January 5, 2026
   padding: 0 6px 4px 0 !important;
   vertical-align: top;
   white-space: normal !important;
+  font-size: 9px !important;
 }
 .xlv-frame .xlv-clues-table .xlv-clue-label {
   background-image: none !important;
