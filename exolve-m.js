@@ -9484,15 +9484,27 @@ Exolve.prototype.printNow = function(mode) {
     this.printAsIs = true;
     this.printOnlyCrossword = false;
   }
-  window.print();
-  /**
-   * As of Sept 2022, Chrome has a bug wherein sometimes (usually after the
-   * first page load), window.print() does not conclude with an 'afterprint'
-   * event. window.print() is modal and handleAfterPrint() can be safely
-   * called twice, so just call it here.
-   */
-  this.handleAfterPrint();
-}
+// Hide WordPress chrome before printing
+  const elementsToHide = [
+    '.site-header', '#masthead', 'header',
+    '.site-footer', '#colophon', 'footer',
+    'nav', '.site-navigation', '.main-navigation',
+    '.breadcrumbs', '.breadcrumb',
+    '.sidebar', '#sidebar', '.widget-area',
+    '.entry-header', '.page-header',
+    '.entry-meta', '.post-meta'
+  ];
+  const hiddenElements = [];
+  elementsToHide.forEach(function(selector) {
+    document.querySelectorAll(selector).forEach(function(el) {
+      if (!el.contains(document.getElementById('exolve'))) {
+        el.style.setProperty('display', 'none', 'important');
+        hiddenElements.push(el);
+      }
+    });
+  });
+
+
 
 Exolve.prototype.handleAfterPrint = function() {
   if (this.printingChanges) {
