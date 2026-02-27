@@ -652,7 +652,6 @@ a.xlv-link:hover {
   justify-content: center;
   touch-action: none;
   width: 100%;
-
 }
 .xlv-phone-kb-btn {
   aspect-ratio: 0.9;
@@ -720,6 +719,7 @@ a.xlv-link:hover {
     display: none;
   }
 }
+
 @media print {
   .xlv-long-clue {
     display: inline;
@@ -750,6 +750,17 @@ a.xlv-link:hover {
     background-color: #000 !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+  }
+
+  /* Reduce clue font size for print only */
+  .xlv-frame {
+    font-size: 11px !important;
+  }
+
+  /* Keep grid numbers readable */
+  .xlv-cell-num,
+  .xlv-cell-text {
+    font-size: 10px !important;
   }
 
   /* Page setup */
