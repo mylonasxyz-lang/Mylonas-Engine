@@ -9484,7 +9484,7 @@ Exolve.prototype.printNow = function(mode) {
     this.printAsIs = true;
     this.printOnlyCrossword = false;
   }
-window.print();
+  window.print();
   /**
    * As of Sept 2022, Chrome has a bug wherein sometimes (usually after the
    * first page load), window.print() does not conclude with an 'afterprint'
@@ -9493,8 +9493,6 @@ window.print();
    */
   this.handleAfterPrint();
 }
- 
-
 
 Exolve.prototype.handleAfterPrint = function() {
   if (this.printingChanges) {
