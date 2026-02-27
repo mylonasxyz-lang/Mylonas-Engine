@@ -727,4 +727,34 @@ a.xlv-link:hover {
   .xlv-concise-clue {
     display: none;
   }
+
+  /* Hide interactive elements */
+  .xlv-button,
+  .xlv-controls-row,
+  .xlv-curr-clue,
+  .xlv-curr-clue-inner,
+  .xlv-phone-kb,
+  .xlv-status,
+  .xlv-small-print {
+    display: none !important;
+  }
+
+  /* Clean up grid appearance */
+  .xlv-grid {
+    box-shadow: none !important;
+    border: 2px solid #000 !important;
+  }
+
+  /* Ensure black cells print correctly */
+  .xlv-black-cell {
+    background-color: #000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Page setup */
+  @page {
+    margin: 1.5cm;
+    size: A4 portrait;
+  }
 }
