@@ -754,7 +754,7 @@ a.xlv-link:hover {
 
   /* Reduce clue font size for print only */
   .xlv-frame {
-    font-size: 11px !important;
+    font-size: 8px !important;
   }
 
   /* Keep grid numbers readable */
