@@ -97,8 +97,6 @@ function buildStrip(puz, pdfUrl) {
 
         host.insertBefore(strip, host.firstChild);
     }
-
-
 function addStyles() {
   if (document.getElementById('exolve-app-styles')) return;
   var style = document.createElement('style');
@@ -160,9 +158,9 @@ function addStyles() {
                Hide .xlv-controls only; .xlv-controls-etc still holds the
                copyright and must stay visible. */
             '.xlv-controls { display: none !important; }',
-            '.mxw-strip { display: flex !important; align-items: stretch; justify-content: space-around; background: #fafafa; border-top: 1px solid #e2e2e2; border-bottom: 1px solid #e2e2e2; margin: 8px 0 0; }',
-            '.mxw-strip-btn { flex: 1 1 0; min-width: 0; display: flex; align-items: center; justify-content: center; background: none; border: none; padding: 10px 2px; color: #3b88eb; cursor: pointer; }',
-            '.mxw-strip-btn:active { background: #e8f1fc; }',
+            '.mxw-strip { display: flex !important; align-items: stretch; justify-content: space-around; background: #d1e4ff; border-top: 1px solid #b9d0ee; border-bottom: 1px solid #b9d0ee; margin: 8px 0 0; }',
+            '.mxw-strip-btn { flex: 1 1 0; min-width: 0; display: flex; align-items: center; justify-content: center; background: none; border: none; padding: 10px 2px; color: #12508f; cursor: pointer; }',
+            '.mxw-strip-btn:active { background: #b9d0ee; }',
             '.mxw-strip-btn svg { width: 22px; height: 22px; }',
 
             /* Phone keyboard pinned to the bottom of the viewport, full width.
@@ -243,8 +241,12 @@ var PUZZLE = `
     ROUNDHOUSE.DYKE
   exolve-across:
     1 Blow a bit of a do (4)
+      Hint: TEST HINT — added for this preview only, not your wording.
+      Hint: TEST HINT 2 — a second one, so the bulb offers another.
     3 Entitle some French put forward (10)
+      Hint: TEST HINT — added for this preview only, not your wording.
     9 A number given income return (4)
+      Hint: TEST HINT — added for this preview only, not your wording.
     10 Ignored fag and became pious (10)
     11 Fighting duel gets Rod back to strength (7)
     13 Divert around our tree (7)
@@ -258,6 +260,7 @@ var PUZZLE = `
     26 There's a barrier in tidy kennel (4)
   exolve-down:
     1 Saint cooks balanced diets but no salad (8)
+      Hint: TEST HINT — a hint on a down clue too.
     2 Delta separated vice soundly from city complex (8)
     4 The Spanish love exercise when running away (5)
     5 Side destroys deliveries (9)
