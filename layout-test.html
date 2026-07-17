@@ -160,6 +160,8 @@ html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: 
     if (this.layers3d > 1) return;
     if (this.gridWidth < 1 || this.gridWidth > 30) return;
 
+    this._mxwWas = this.squareDim;   /* test harness only */
+
     var full = Math.floor(
         (this.viewportDimUsable - 8 - this.GRIDLINE) / this.gridWidth) -
         this.GRIDLINE;
@@ -272,13 +274,58 @@ document.addEventListener('click', function(e) {
    Measure it and reserve exactly that much at the bottom of .mxw-root.
    This is what replaces the padding-bottom:200px hack.
    ================================================================== */
+/**
+ * CAREFUL: two elements carry class .xlv-phone-kb — the empty div from
+ * Exolve's HTML template (line 1075), and the real keyboard that ExolveKB
+ * builds separately (line 1508). Our CSS forces both visible, and the empty
+ * template comes first in the document, so querySelector() finds the wrong
+ * one and reports 12px of padding. Measure them all and take the tallest.
+ */
+function kbHeight() {
+  var els = document.querySelectorAll('.xlv-phone-kb');
+  var h = 0;
+  for (var i = 0; i < els.length; i++) {
+    if (els[i].offsetHeight > h) h = els[i].offsetHeight;
+  }
+  return h;
+}
+
 function syncKeyboardHeight() {
-  var kb = document.querySelector('.xlv-phone-kb');
-  if (!kb) return;
-  var h = kb.offsetHeight;
-  if (h > 0) {
+  var h = kbHeight();
+  if (h > 60) {
     document.documentElement.style.setProperty('--mxw-kb-h', h + 'px');
   }
+}
+
+/**
+ * The real keyboard is built lazily on first focus, so we cannot just observe
+ * what exists at startup. Poll until it turns up, then keep watching it.
+ */
+var kbObservers = [];
+function watchKeyboard() {
+  syncKeyboardHeight();
+  if (typeof ResizeObserver !== 'function') return;
+  var els = document.querySelectorAll('.xlv-phone-kb');
+  if (els.length === kbObservers.length) return;
+  kbObservers.forEach(function(o) { o.disconnect(); });
+  kbObservers = [];
+  for (var i = 0; i < els.length; i++) {
+    var o = new ResizeObserver(function() {
+      syncKeyboardHeight();
+      if (window.__mxwPuz) showDebug(window.__mxwPuz);
+    });
+    o.observe(els[i]);
+    kbObservers.push(o);
+  }
+}
+
+function pollKeyboard() {
+  var tries = 0;
+  var t = setInterval(function() {
+    watchKeyboard();
+    if (window.__mxwPuz) showDebug(window.__mxwPuz);
+    if (++tries > 60 || kbHeight() > 60) clearInterval(t);
+  }, 250);
 }
 
 /* ==================================================================
@@ -320,13 +367,21 @@ function selectFirstAcross(puz) {
 function showDebug(puz) {
   var el = document.getElementById('mxw-debug');
   if (!el) return;
-  var kb = document.querySelector('.xlv-phone-kb');
+  var bar = document.getElementById('mxw-cluebar');
+  var patch = (puz._mxwWas == null) ? 'n/a' :
+      (puz._mxwWas === puz.squareDim ? 'no-op' : puz._mxwWas + '\u2192' + puz.squareDim);
+  var rect = bar ? bar.getBoundingClientRect() : null;
   el.innerHTML =
     'vw ' + window.innerWidth + ' vh ' + window.innerHeight + '<br>' +
-    'cell ' + puz.squareDim + 'px (was 31)<br>' +
-    'grid ' + ((puz.squareDim + 1) * puz.gridWidth + 1) + 'px wide<br>' +
-    'kb ' + (kb ? kb.offsetHeight : '?') + 'px  clue ' +
-    document.getElementById('mxw-cluebar').offsetHeight + 'px';
+    puz.gridWidth + ' cols, cell ' + puz.squareDim + 'px<br>' +
+    'grid ' + ((puz.squareDim + 1) * puz.gridWidth + 1) + 'px of ' +
+    window.innerWidth + '<br>' +
+    'patch ' + patch + '<br>' +
+    'kb ' + kbHeight() + 'px (' +
+    document.querySelectorAll('.xlv-phone-kb').length + ' found)<br>' +
+    'clue h' + (bar ? bar.offsetHeight : '?') +
+    ' top ' + (rect ? Math.round(rect.top) : '?') +
+    ' bot ' + (rect ? Math.round(rect.bottom) : '?');
 }
 
 /* ==================================================================
@@ -340,11 +395,13 @@ function afterRender(puz) {
       currClue.style.display = 'block';
       cluebar.appendChild(currClue);
     }
+    window.__mxwPuz = puz;
     buildToolbar(puz);
     killKbPreview();
-    syncKeyboardHeight();
     selectFirstAcross(puz);
-    setTimeout(function() { syncKeyboardHeight(); showDebug(puz); }, 200);
+    watchKeyboard();
+    pollKeyboard();
+    setTimeout(function() { showDebug(puz); }, 400);
   }, 300);
 }
 
