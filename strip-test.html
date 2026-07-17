@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>Mylonas strip test</title>
+
+<link rel="stylesheet" type="text/css" href="exolve-m.css"/>
+<script src="exolve-m.js"></script>
+
+<style>
+html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #fff; }
+.mxw-dbg { position: fixed; top: 0; right: 0; z-index: 300; background: rgba(0,0,0,0.72); color: #fff; font: 10px/1.35 monospace; padding: 4px 6px; border-bottom-left-radius: 6px; pointer-events: none; }
+</style>
+</head>
+<body>
+
+<div id="app" style="height:100%"></div>
+<div class="mxw-dbg" id="mxw-dbg">loading\u2026</div>
+
+<script>
+/* ------------------------------------------------------------------
+   STRIP TEST. Mirrors the app's current layout exactly — clue box above
+   the grid, grid unchanged, keyboard fixed at the bottom. The ONLY
+   difference is Exolve's two button rows replaced by the icon strip.
+
+   Icon colour is switchable so it can be settled on the phone:
+     ?icon=mid    (default)  #12508f
+     ?icon=light             #3b88eb   (today's button blue)
+     ?icon=navy              #011935   (the app bar navy)
+   ------------------------------------------------------------------ */
+var SHADES = { mid: '#12508f', light: '#3b88eb', navy: '#011935' };
+var pick = (location.search.match(/icon=(\w+)/) || [])[1];
+var ICON_COLOUR = SHADES[pick] || SHADES.mid;
+
+/* stubs — these live in app.js in the real app */
+var MylonasApp = {
+  memberBadge: function() {
+    return '<div style="width:34px;height:34px;border-radius:50%;background:#3b88eb;color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.8em;font-weight:bold;flex:0 0 auto">P</div>';
+  },
+  wireMemberBadge: function() {},
+  closePuzzle: function() { alert('closePuzzle() in the real app'); }
+};
+
+var STRIP_ICONS = {
+        clear:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 20H8.5l-4.21-4.3a1 1 0 0 1 0-1.4L14 5l6 6-8 8"/><path d="M18 13.3 11.7 7"/></svg>',
+        reset:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4"/><path d="M4 13a8.1 8.1 0 0 0 15.5 2M20 19v-4h-4"/></svg>',
+        reveal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12a2 2 0 1 0 4 0 2 2 0 1 0-4 0"/><path d="M21 12c-2.4 4-5.4 6-9 6s-6.6-2-9-6c2.4-4 5.4-6 9-6s6.6 2 9 6"/></svg>',
+        solve:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h1m8-9v1m8 8h1M5.6 5.6l.7.7m12.1-.7-.7.7"/><path d="M9 16a5 5 0 1 1 6 0 3.5 3.5 0 0 0-1 3 2 2 0 0 1-4 0 3.5 3.5 0 0 0-1-3"/><path d="M9.7 17h4.6"/></svg>',
+        print:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 17h2a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h2"/><path d="M17 9V3H7v6M7 13h10v8H7z"/></svg>'
+    };
+
+var STRIP_ITEMS = [
+        { icon: 'clear',  title: 'Clear Word',    suffix: '-clear' },
+        { icon: 'reset',  title: 'Reset',         suffix: '-clear-all' },
+        { icon: 'reveal', title: 'Reveal Word',   suffix: '-reveal' },
+        { icon: 'solve',  title: 'Show Solution', suffix: '-reveal-all' },
+        { icon: 'print',  title: 'Print / PDF',   suffix: null }
+    ];
+
+function buildStrip(puz, pdfUrl) {
+        var host = document.querySelector('.xlv-controls-etc');
+        if (!host || !puz || document.getElementById('mxw-strip')) return;
+
+        var strip = document.createElement('div');
+        strip.id = 'mxw-strip';
+        strip.className = 'mxw-strip';
+
+        STRIP_ITEMS.forEach(function(item) {
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'mxw-strip-btn';
+            btn.innerHTML = STRIP_ICONS[item.icon];
+            btn.title = item.title;
+            btn.setAttribute('aria-label', item.title);
+
+            if (item.suffix) {
+                var target = document.getElementById(puz.prefix + item.suffix);
+                // Exolve hides the reveal buttons for puzzles with no solutions
+                if (!target || target.style.display === 'none') return;
+                btn.addEventListener('click', function() { target.click(); });
+            } else {
+                btn.addEventListener('click', function() {
+                    if (pdfUrl) {
+                        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Browser) {
+                            window.Capacitor.Plugins.Browser.open({ url: pdfUrl });
+                        } else {
+                            window.open(pdfUrl, '_blank');
+                        }
+                    } else {
+                        window.print();
+                    }
+                });
+            }
+            strip.appendChild(btn);
+        });
+
+        host.insertBefore(strip, host.firstChild);
+    }
+
+
+function addStyles() {
+  if (document.getElementById('exolve-app-styles')) return;
+  var style = document.createElement('style');
+  style.id = 'exolve-app-styles';
+  style.textContent = [
+            /* Root fills the puzzle overlay; three stacked zones */
+            '.mxw-root { display: flex; flex-direction: column; height: 100%; width: 100%; position: relative; align-items: stretch; margin: 0; }',
+
+            /* Navy app-bar band — matches the app's other subpages */
+            '.mxw-appbar { flex: 0 0 auto; display: flex; align-items: center; gap: 8px; background: #011935; color: #fff; padding: calc(8px + env(safe-area-inset-top)) 12px 8px; }',
+            '.mxw-back { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; flex: 0 0 auto; background: none; border: none; color: #fff; cursor: pointer; padding: 0; }',
+            '.mxw-back:active { opacity: 0.55; }',
+            '.mxw-apptitle { flex: 1 1 auto; min-width: 0; text-align: center; font-size: 1.4em; font-weight: bold; color: #fff; line-height: 1.15; }',
+
+            /* Date + setter strip under the band */
+            '.mxw-subbar { flex: 0 0 auto; text-align: center; background: #fff; padding: 9px 12px 7px; }',
+            '.mxw-subtitle { font-size: 0.95em; color: #777; }',
+            '.mxw-setter { font-size: 0.9em; color: #4caf6e; margin-top: 2px; }',
+            '.mxw-setter-row { position: relative; text-align: center; }',
+            '.mxw-howto-btn { position: absolute; left: 6px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; border-radius: 50%; border: 1.3px solid #3b88eb; background: #fff; color: #3b88eb; display: flex; align-items: center; justify-content: center; padding: 0; cursor: pointer; }',
+            '.mxw-howto-hint { color: #c0392b; font-weight: 900; font-size: 1.15em; }',
+
+            '.mxw-cluebar { background: #d1e4ff; color: #333; max-height: 40vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }',
+            '.mxw-cluebar:empty { display: none; }',
+
+            /* MIDDLE: grid + buttons scroll */
+            '.mxw-gridwrap { flex: 1 1 auto; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 12px 8px; padding-bottom: 200px; }',
+
+            /* Fonts */
+            '.mxw-root, .mxw-root * { font-family: "Trebuchet MS", sans-serif !important; }',
+
+            /* The moved current-clue box sits naturally in the bar */
+            '.mxw-cluebar .xlv-curr-clue { position: static !important; max-width: none !important; width: auto !important; max-height: none !important; height: auto !important; overflow: visible !important; margin: 0 !important; padding: 10px 14px !important; background: #d1e4ff !important; color: #333 !important; border-radius: 0 !important; box-shadow: none !important; z-index: auto !important; font-size: 0.85em !important; }',
+            '.mxw-cluebar .xlv-curr-clue-inner { background: transparent !important; color: #333 !important; max-height: none !important; height: auto !important; overflow: visible !important; }',
+
+            /* Grid */
+            '.xlv-grid-panel { max-width: 100% !important; overflow-x: auto !important; }',
+            '.xlv-grid { border: 1px solid #000 !important; border-radius: 0 !important; box-shadow: none !important; }',
+
+            /* Hide what we do not want: clue lists, title/setter, status, small print, nav arrows */
+            '.xlv-clues-panel, .xlv-clues { display: none !important; }',
+            '.xlv-title-setter, .xlv-preamble { display: none !important; }',
+            '.xlv-status { display: none !important; }',
+            /* Don't hide .xlv-small-print wholesale — the copyright lives inside it.
+               A hidden parent can't be overridden by a visible child, so instead we
+               keep the wrapper visible and hide only its non-copyright children. */
+            '.xlv-small-print { display: block !important; text-align: center !important; }',
+            '.xlv-small-print > *:not(.xlv-copyright) { display: none !important; }',
+            '.xlv-prev, .xlv-next { display: none !important; }',
+            '.xlv-controls-row:nth-child(2) { display: none !important; }',
+            '.xlv-copyright { display: block !important; text-align: center !important; font-size: 0.72em !important; color: #999 !important; margin: 8px auto 4px !important; padding: 0 !important; }',
+            /* Hide the keyboard preview oval (pale blue disc above the keyboard) */
+            '.xlv-kb-preview { display: none !important; }',
+
+            /* Hide the original in-grid current clue (we moved it to the top) */
+            '.xlv-grid-parent-centerer > .xlv-curr-clue { display: none !important; }',
+
+            /* Action strip — replaces Exolve's two button rows.
+               Hide .xlv-controls only; .xlv-controls-etc still holds the
+               copyright and must stay visible. */
+            '.xlv-controls { display: none !important; }',
+            '.mxw-strip { display: flex !important; align-items: stretch; justify-content: space-around; background: #fafafa; border-top: 1px solid #e2e2e2; border-bottom: 1px solid #e2e2e2; margin: 8px 0 0; }',
+            '.mxw-strip-btn { flex: 1 1 0; min-width: 0; display: flex; align-items: center; justify-content: center; background: none; border: none; padding: 10px 2px; color: #3b88eb; cursor: pointer; }',
+            '.mxw-strip-btn:active { background: #e8f1fc; }',
+            '.mxw-strip-btn svg { width: 22px; height: 22px; }',
+
+            /* Phone keyboard pinned to the bottom of the viewport, full width.
+               Works because we clear the overlay transform after opening. */
+            '.xlv-phone-kb { background: #f0f0f0 !important; padding: 6px 4px !important; padding-bottom: calc(6px + env(safe-area-inset-bottom)) !important; box-shadow: 0 -2px 10px rgba(0,0,0,0.2) !important; position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: 100vw !important; max-width: 100vw !important; box-sizing: border-box !important; z-index: 100 !important; display: block !important; }',
+            /* Any direct child rows of the keyboard fill the width */
+            '.xlv-phone-kb > div { display: flex !important; gap: 4px !important; margin: 0 auto 5px !important; padding: 0 5px !important; width: 100% !important; box-sizing: border-box !important; justify-content: center !important; }',
+            '.xlv-phone-kb > div:last-child { margin-bottom: 0 !important; }',
+            /* Every button/key stretches to share the row width */
+            '.xlv-phone-kb button, .xlv-phone-kb-btn { background: white !important; border: 1px solid #3b88eb !important; border-radius: 4px !important; color: #3b88eb !important; font-weight: bold !important; font-size: 18px !important; flex: 1 1 0 !important; min-width: 0 !important; max-width: none !important; width: auto !important; height: 44px !important; padding: 0 !important; margin: 0 !important; }',
+            '.xlv-phone-kb button:active, .xlv-phone-kb-btn:active { background: #3b88eb !important; color: white !important; }'
+        ].join('\n');
+  document.head.appendChild(style);
+  var extra = document.createElement('style');
+  extra.textContent = '.mxw-strip-btn { color: ' + ICON_COLOUR + ' !important; }';
+  document.head.appendChild(extra);
+}
+
+function killKbPreview() {
+  var remove = function() {
+    var els = document.querySelectorAll('.xlv-kb-preview');
+    for (var i = 0; i < els.length; i++) {
+      els[i].parentNode && els[i].parentNode.removeChild(els[i]);
+    }
+  };
+  remove();
+  try {
+    var root = document.querySelector('.mxw-root') || document.body;
+    var obs = new MutationObserver(remove);
+    obs.observe(root, { childList: true, subtree: true });
+    setTimeout(function() { obs.disconnect(); }, 30000);
+  } catch (e) {}
+}
+
+function selectFirstAcross(puz) {
+  try {
+    if (!puz || !puz.clues) return;
+    var firstA = null, firstNum = Infinity;
+    for (var key in puz.clues) {
+      var c = puz.clues[key];
+      if (!c) continue;
+      var isAcross = (c.dir === 'A') || (key.indexOf('A') === key.length - 1);
+      var num = parseInt(c.label, 10);
+      if (isAcross && !isNaN(num) && num < firstNum) { firstNum = num; firstA = key; }
+    }
+    if (firstA && typeof puz.cnavTo === 'function') puz.cnavTo(firstA);
+  } catch (e) {}
+}
+
+function dbg(msg) {
+  var el = document.getElementById('mxw-dbg');
+  if (el) el.innerHTML = msg;
+}
+
+var PUZZLE = `
+  exolve-begin
+  exolve-width: 15
+  exolve-height: 15
+  exolve-title: The Mylonas Monthly-Feb 2026
+  exolve-setter: Mylonas
+  exolve-copyright: Mylonas Crosswords
+  exolve-option: ignore-enum-mismatch
+  exolve-grid:
+    BASH.DENOMINATE
+    E.Y...L.F.N.D.A
+    NINE.GODFEARING
+    E.D...P.B.G.E.L
+    DURABLE.REROUTE
+    I.O.R...E.E.S.S
+    COMMONPLACE....
+    T.E.A.I.K.M.O.T
+    ....DISASSEMBLE
+    B.I.M.T...N.I.R
+    AMERICA.ROTATOR
+    N.Y.N.C.O...U.E
+    GRANDCHILD.BARN
+    E.S.E.I.E...R.C
+    ROUNDHOUSE.DYKE
+  exolve-across:
+    1 Blow a bit of a do (4)
+    3 Entitle some French put forward (10)
+    9 A number given income return (4)
+    10 Ignored fag and became pious (10)
+    11 Fighting duel gets Rod back to strength (7)
+    13 Divert around our tree (7)
+    14 Coarse setting is widespread (11)
+    18 Based upon smiles unfortunately led to break up. (11)
+    21 Before noon Heather finds us (7)
+    22 Either way gold encircles cheap wheel (7)
+    23 Third generation of Big Issue (10)
+    24 Graduate ran artless shed (4)
+    25 Out of honour sued variety theatre (10)
+    26 There's a barrier in tidy kennel (4)
+  exolve-down:
+    1 Saint cooks balanced diets but no salad (8)
+    2 Delta separated vice soundly from city complex (8)
+    4 The Spanish love exercise when running away (5)
+    5 Side destroys deliveries (9)
+    6 From integer and name make accord (2,9)
+    7 Notice that is American saying farewells (6)
+    8 Fliers are well below standard (6)
+    12 Liberal cared, being tolerant (11)
+    15 Crazy cop is Thai nut (9)
+    16 Forced IRA out by necrology (8)
+    17 Recentre changed for actor Stamp (8)
+    19 Second class rage making firework (6)
+    20 Head man that is unknown as you heard (6)
+    22 Loser plays these parts (5)
+  exolve-end`;
+
+window.addEventListener('load', function() {
+  addStyles();
+  var container = document.getElementById('app');
+  container.innerHTML =
+    '<div class="mxw-root">' +
+      '<div class="mxw-appbar">' +
+        '<button class="mxw-back" id="mxw-back" aria-label="Back">' +
+          '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>' +
+        '</button>' +
+        '<div class="mxw-apptitle">Mylonas Monthly</div>' +
+        MylonasApp.memberBadge() +
+      '</div>' +
+      '<div class="mxw-subbar">' +
+        '<div class="mxw-subtitle">February 2026</div>' +
+        '<div class="mxw-setter-row"><div class="mxw-setter">By Mylonas</div></div>' +
+      '</div>' +
+      '<div class="mxw-cluebar" id="mxw-cluebar"></div>' +
+      '<div class="mxw-gridwrap"><div id="exolve"></div></div>' +
+    '</div>';
+
+  setTimeout(function() {
+    if (typeof Exolve !== 'function') {
+      dbg('Exolve did not load');
+      return;
+    }
+    var gridwrap = container.querySelector('.mxw-gridwrap');
+    var visTop = gridwrap ? gridwrap.offsetTop : 120;
+    try {
+      new Exolve(PUZZLE, 'exolve', function(puz) {
+        setTimeout(function() {
+          var currClue = document.querySelector('.xlv-curr-clue');
+          var cluebar = document.getElementById('mxw-cluebar');
+          if (currClue && cluebar) {
+            currClue.style.display = 'block';
+            cluebar.appendChild(currClue);
+          }
+          buildStrip(puz, '');
+          killKbPreview();
+          selectFirstAcross(puz);
+          setTimeout(function() {
+            var strip = document.getElementById('mxw-strip');
+            dbg('icons ' + ICON_COLOUR + '<br>strip ' +
+                (strip ? strip.querySelectorAll('button').length + ' btns h' + strip.offsetHeight : 'MISSING'));
+          }, 300);
+        }, 300);
+      }, true, visTop, 0, true);
+    } catch (e) {
+      dbg('' + e);
+    }
+  }, 80);
+});
+</script>
+
+</body>
+</html>
